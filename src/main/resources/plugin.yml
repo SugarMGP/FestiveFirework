@@ -1,0 +1,12 @@
+name: FestiveFirework
+version: '${project.version}'
+main: io.github.sugarmgp.festivefirework.FestiveFirework
+api-version: 1.13
+authors: [ SugarMGP ]
+commands:
+  festivefirework:
+    aliases:
+      - "ff"
+permissions:
+  ff.commands.use:
+    default: op
