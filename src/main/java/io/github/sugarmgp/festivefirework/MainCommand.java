@@ -107,9 +107,9 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                 for (Map<?, ?> map : points) {
                     String name = (String) map.get("name");
                     String world = (String) map.get("world");
-                    String x = String.format("%.1f", (double) map.get("x"));
-                    String y = String.format("%.1f", (double) map.get("y"));
-                    String z = String.format("%.1f", (double) map.get("z"));
+                    String x = String.format("%.1f", (Double) map.get("x"));
+                    String y = String.format("%.1f", (Double) map.get("y"));
+                    String z = String.format("%.1f", (Double) map.get("z"));
                     commandSender.sendMessage(msgHead + ChatColor.AQUA + name + " " + world + " " + x + " " + y + " " + z);
                 }
             } else if (message0.equals("reload")) {

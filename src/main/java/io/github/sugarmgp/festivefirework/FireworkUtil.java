@@ -58,9 +58,9 @@ public class FireworkUtil {
 
                 String worldName = (String) map.get("world");
                 int power = r.nextInt(3) + 2;
-                double x = (double) map.get("x");
-                double y = (double) map.get("y");
-                double z = (double) map.get("z");
+                double x = (Double) map.get("x");
+                double y = (Double) map.get("y");
+                double z = (Double) map.get("z");
 
                 FireworkEffect f = fb.build();
 
