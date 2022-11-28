@@ -27,6 +27,18 @@ public class FireworkUtil {
         Plugin plugin = FestiveFirework.getProvidingPlugin(FestiveFirework.class);
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             for (Map<?, ?> map : points) {
+                String worldName = (String) map.get("world");
+                World world = Bukkit.getWorld(worldName);
+                double x = (Double) map.get("x");
+                double y = (Double) map.get("y");
+                double z = (Double) map.get("z");
+                Location location = new Location(world, x, y, z);
+
+                if (Bukkit.getOnlinePlayers().size() == 0)
+                    continue;
+                if (!location.getChunk().isLoaded())
+                    continue;
+
                 FireworkEffect.Builder fb = FireworkEffect.builder();
                 Random r = new Random();
 
@@ -55,13 +67,7 @@ public class FireworkUtil {
                     fb.withTrail();
                 }
 
-                String worldName = (String) map.get("world");
-                World world = Bukkit.getWorld(worldName);
                 int power = r.nextInt(3) + 2;
-                double x = (Double) map.get("x");
-                double y = (Double) map.get("y");
-                double z = (Double) map.get("z");
-                Location location = new Location(world, x, y, z);
 
                 Bukkit.getScheduler().runTask(plugin, () -> {
                     Firework fw = (Firework) world.spawnEntity(location, EntityType.FIREWORK);
