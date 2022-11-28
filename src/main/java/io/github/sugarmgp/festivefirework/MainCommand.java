@@ -48,6 +48,10 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                     commandSender.sendMessage(msgHead + ChatColor.RED + "此命令无法在控制台调用");
                     return false;
                 }
+                if (FireworkUtil.getStatus()) {
+                    commandSender.sendMessage(msgHead + ChatColor.RED + "请先停止烟花燃放");
+                    return false;
+                }
                 String message1 = strings[1];
                 if (!isLetterDigit(message1)) {
                     commandSender.sendMessage(msgHead + ChatColor.RED + "燃放点名称只能包含数字和字母");
@@ -64,8 +68,12 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                 points.add(createPoint(message1, location.getWorld().getName(), location.getX(), location.getY(), location.getZ()));
                 config.set("points", points);
                 plugin.saveConfig();
-                commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功添加" + message1 + "燃放点");
+                commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功添加 " + message1 + " 燃放点");
             } else if (message0.equals("del")) {
+                if (FireworkUtil.getStatus()) {
+                    commandSender.sendMessage(msgHead + ChatColor.RED + "请先停止烟花燃放");
+                    return false;
+                }
                 String message1 = strings[1];
                 if (!isLetterDigit(message1)) {
                     commandSender.sendMessage(msgHead + ChatColor.RED + "燃放点名称只能包含数字和字母");
@@ -80,7 +88,7 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                     points.remove(flag);
                     config.set("points", points);
                     plugin.saveConfig();
-                    commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功删除" + message1 + "燃放点");
+                    commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功删除 " + message1 + " 燃放点");
                 }
             } else {
                 commandSender.sendMessage(msgHead + ChatColor.RED + "语法错误");
@@ -92,7 +100,13 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                     commandSender.sendMessage(msgHead + ChatColor.RED + "烟花燃放已经开始了");
                     return false;
                 }
-                FireworkUtil.start(config.getInt("interval"), config.getMapList("points"));
+                int interval = config.getInt("interval");
+                if (interval < 10) {
+                    commandSender.sendMessage(msgHead + ChatColor.GOLD + "由于性能原因，请不要设置 interval 小于 10");
+                    commandSender.sendMessage(msgHead + ChatColor.GOLD + "将使用 10 作为 interval 值");
+                    interval = 10;
+                }
+                FireworkUtil.start(interval, config.getMapList("points"));
                 commandSender.sendMessage(msgHead + ChatColor.GREEN + "开始燃放烟花");
             } else if (message0.equals("stop")) {
                 if (!FireworkUtil.getStatus()) {
@@ -159,7 +173,7 @@ public class MainCommand implements CommandExecutor, TabExecutor {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-        List<String> commandTab = new ArrayList<String>();
+        ArrayList<String> commandTab = new ArrayList<String>();
         if (args.length == 1) {
             commandTab.add("add");
             commandTab.add("del");
@@ -169,7 +183,7 @@ public class MainCommand implements CommandExecutor, TabExecutor {
             commandTab.add("help");
             commandTab.add("reload");
             return commandTab;
-        } else if (args.length == 2 && args[1].equals("del")) {
+        } else if (args.length == 2 && args[0].equals("del")) {
             FileConfiguration config = FestiveFirework.getProvidingPlugin(FestiveFirework.class).getConfig();
             List<Map<?, ?>> points = config.getMapList("points");
             for (Map<?, ?> map : points) {
