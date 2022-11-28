@@ -21,22 +21,26 @@ public class MainCommand implements CommandExecutor, TabExecutor {
         return str.matches(regex);
     }
 
+    private static void sendHelp(String head, CommandSender commandSender) {
+        commandSender.sendMessage(head + ChatColor.AQUA + "插件用法如下：");
+        commandSender.sendMessage(head + ChatColor.AQUA + "/ff add <名称> - 添加当前玩家位置为一个燃放点");
+        commandSender.sendMessage(head + ChatColor.AQUA + "/ff del <名称> - 删除一个燃放点");
+        commandSender.sendMessage(head + ChatColor.AQUA + "/ff list - 查看燃放点列表");
+        commandSender.sendMessage(head + ChatColor.AQUA + "/ff start - 开始燃放烟花");
+        commandSender.sendMessage(head + ChatColor.AQUA + "/ff stop - 停止燃放烟花");
+        commandSender.sendMessage(head + ChatColor.AQUA + "/ff reload - 重载插件");
+    }
+
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         Plugin plugin = FestiveFirework.getProvidingPlugin(FestiveFirework.class);
         FileConfiguration config = plugin.getConfig();
-        String msgHead = ChatColor.YELLOW + "[FestiveFirework]";
+        String msgHead = ChatColor.YELLOW + "【FestiveFirework】";
         if (!(commandSender.hasPermission("ff.commands.use"))) {
             commandSender.sendMessage(msgHead + ChatColor.RED + "您没有权限使用此命令");
             return false;
         }
         if (strings.length == 0) {
-            commandSender.sendMessage(msgHead + ChatColor.AQUA + "插件用法如下：");
-            commandSender.sendMessage(msgHead + ChatColor.AQUA + "/ff add <名称> - 添加当前玩家位置为一个燃放点");
-            commandSender.sendMessage(msgHead + ChatColor.AQUA + "/ff del <名称> - 删除一个燃放点");
-            commandSender.sendMessage(msgHead + ChatColor.AQUA + "/ff list - 查看燃放点列表");
-            commandSender.sendMessage(msgHead + ChatColor.AQUA + "/ff start - 开始燃放烟花");
-            commandSender.sendMessage(msgHead + ChatColor.AQUA + "/ff stop - 停止燃放烟花");
-            commandSender.sendMessage(msgHead + ChatColor.AQUA + "/ff reload - 重载插件");
+            sendHelp(msgHead, commandSender);
         } else if (strings.length == 2) {
             String message0 = strings[0];
             if (message0.equals("add")) {
@@ -119,6 +123,8 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                 }
                 plugin.reloadConfig();
                 commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功重载插件");
+            } else if (message0.equals("help")) {
+                sendHelp(msgHead, commandSender);
             } else {
                 commandSender.sendMessage(msgHead + ChatColor.RED + "语法错误");
             }
@@ -160,6 +166,7 @@ public class MainCommand implements CommandExecutor, TabExecutor {
             commandTab.add("list");
             commandTab.add("start");
             commandTab.add("stop");
+            commandTab.add("help");
             commandTab.add("reload");
             return commandTab;
         } else if (args.length == 2 && args[1].equals("del")) {
