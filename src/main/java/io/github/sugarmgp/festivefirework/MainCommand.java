@@ -101,10 +101,10 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                     return false;
                 }
                 int interval = config.getInt("interval");
-                if (interval < 10) {
-                    commandSender.sendMessage(msgHead + ChatColor.GOLD + "由于性能原因，请不要设置 interval 小于 10");
-                    commandSender.sendMessage(msgHead + ChatColor.GOLD + "将使用 10 作为 interval 值");
-                    interval = 10;
+                if (interval < 7) {
+                    commandSender.sendMessage(msgHead + ChatColor.GOLD + "由于性能原因，请不要设置 interval 小于 7");
+                    commandSender.sendMessage(msgHead + ChatColor.GOLD + "将使用 7 作为 interval 值");
+                    interval = 7;
                 }
                 FireworkUtil.start(interval, config.getMapList("points"));
                 commandSender.sendMessage(msgHead + ChatColor.GREEN + "开始燃放烟花");
