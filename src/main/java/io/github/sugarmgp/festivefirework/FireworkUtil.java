@@ -75,6 +75,7 @@ public class FireworkUtil {
                     fwm.clearEffects();
                     fwm.addEffect(fb.build());
                     fwm.setPower(power);
+                    fw.setPersistent(false);
                     fw.setFireworkMeta(fwm);
                     Bukkit.getScheduler().runTaskLater(plugin, new RemoveFirework(fw), power * 30 + 40);
                 });
