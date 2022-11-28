@@ -56,26 +56,24 @@ public class FireworkUtil {
                 }
 
                 String worldName = (String) map.get("world");
+                World world = Bukkit.getWorld(worldName);
                 int power = r.nextInt(3) + 2;
                 double x = (Double) map.get("x");
                 double y = (Double) map.get("y");
                 double z = (Double) map.get("z");
-
-                FireworkEffect f = fb.build();
+                Location location = new Location(world, x, y, z);
 
                 Bukkit.getScheduler().runTask(plugin, () -> {
-                    World world = Bukkit.getWorld(worldName);
-                    Location location = new Location(world, x, y, z);
                     Firework fw = (Firework) world.spawnEntity(location, EntityType.FIREWORK);
                     FireworkMeta fwm = fw.getFireworkMeta();
                     fwm.clearEffects();
-                    fwm.addEffect(f);
+                    fwm.addEffect(fb.build());
                     fwm.setPower(power);
                     fw.setFireworkMeta(fwm);
                     Bukkit.getScheduler().runTaskLater(plugin, new RemoveFirework(fw), power * 30 + 40);
                 });
             }
-        }, 5, interval);
+        }, 1, interval);
     }
 
     public static boolean getStatus() {
