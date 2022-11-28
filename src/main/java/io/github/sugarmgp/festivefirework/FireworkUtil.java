@@ -20,14 +20,13 @@ public class FireworkUtil {
 
     public static void stop() {
         isWorking = false;
+        Bukkit.getScheduler().cancelTasks(FestiveFirework.getProvidingPlugin(FestiveFirework.class));
     }
 
     private static void work(int interval, List<Map<?, ?>> points) {
         Plugin plugin = FestiveFirework.getProvidingPlugin(FestiveFirework.class);
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             for (Map<?, ?> map : points) {
-                if (!isWorking) return;
-
                 FireworkEffect.Builder fb = FireworkEffect.builder();
                 Random r = new Random();
 
@@ -76,7 +75,7 @@ public class FireworkUtil {
                     Bukkit.getScheduler().runTaskLater(plugin, new RemoveFirework(fw), power * 30 + 40);
                 });
             }
-        }, 1, interval);
+        }, 5, interval);
     }
 
     public static boolean getStatus() {
