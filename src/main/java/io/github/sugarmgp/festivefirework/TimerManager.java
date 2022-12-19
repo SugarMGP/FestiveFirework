@@ -25,12 +25,10 @@ public class TimerManager {
     private SimpleDateFormat formatter;
 
     public TimerManager() {
-        saveDefaultConfig();
         formatter = new SimpleDateFormat("yyyy.MM.dd-HH:mm:ss");
         timerFile = new File(getPlugin().getDataFolder(), "timer.yml");
         reloadTimerConfig();
         timers = timerConfig.getMapList("timers");
-        timerWork();
     }
 
     public List<Map<?, ?>> getTimerList() {
@@ -57,7 +55,7 @@ public class TimerManager {
         return true;
     }
 
-    private void timerWork() {
+    public void timerWork() {
         Plugin plugin = FestiveFirework.getProvidingPlugin(FestiveFirework.class);
         Logger logger = plugin.getLogger();
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {

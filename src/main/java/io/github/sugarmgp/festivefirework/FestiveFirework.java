@@ -11,12 +11,19 @@ public final class FestiveFirework extends JavaPlugin {
         timerManager = new TimerManager();
         saveDefaultConfig();
         getCommand("festivefirework").setExecutor(new MainCommand());
+        timerManager.timerWork();
     }
 
     @Override
     public void onDisable() {
         saveConfig();
         Bukkit.getScheduler().cancelTasks(this);
+    }
+
+    @Override
+    public void saveDefaultConfig() {
+        super.saveDefaultConfig();
+        timerManager.saveDefaultConfig();
     }
 
     public TimerManager getTimerManager() {
