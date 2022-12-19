@@ -10,10 +10,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class MainCommand implements CommandExecutor, TabExecutor {
     private static boolean isLetterDigit(String str) {
@@ -28,6 +27,10 @@ public class MainCommand implements CommandExecutor, TabExecutor {
         commandSender.sendMessage(head + ChatColor.AQUA + "/ff list - 查看燃放点列表");
         commandSender.sendMessage(head + ChatColor.AQUA + "/ff start - 开始燃放烟花");
         commandSender.sendMessage(head + ChatColor.AQUA + "/ff stop - 停止燃放烟花");
+        commandSender.sendMessage(head + ChatColor.AQUA + "/ff timer add-start <yyyyMMdd-HHmmss> - 添加定时开始燃放烟花");
+        commandSender.sendMessage(head + ChatColor.AQUA + "/ff timer add-stop <yyyyMMdd-HHmmss> - 添加定时停止燃放烟花");
+        commandSender.sendMessage(head + ChatColor.AQUA + "/ff timer del <序号> - 删除一个定时器");
+        commandSender.sendMessage(head + ChatColor.AQUA + "/ff timer list - 查看定时器列表");
         commandSender.sendMessage(head + ChatColor.AQUA + "/ff reload - 重载插件");
     }
 
@@ -90,6 +93,29 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                     plugin.saveConfig();
                     commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功删除 " + message1 + " 燃放点");
                 }
+            } else if (message0.equals("timer")) {
+                String message1 = strings[1];
+                if (message1.equals("list")) {
+                    TimerManager timerManager = FestiveFirework.getPlugin(FestiveFirework.class).getTimerManager();
+                    List<Map<?, ?>> timers = timerManager.getTimerList();
+                    if (timers.isEmpty()) {
+                        commandSender.sendMessage(msgHead + ChatColor.RED + "定时器列表为空");
+                        return false;
+                    }
+                    commandSender.sendMessage(msgHead + ChatColor.AQUA + "定时器列表如下：");
+                    for (int i = 0; i < timers.size(); i++) {
+                        Map<?, ?> map = timers.get(i);
+                        int t = (Integer) map.get("type");
+                        String date = (String) map.get("date");
+                        String type = "start";
+                        if (t == 2) {
+                            type = "stop ";
+                        }
+                        commandSender.sendMessage(msgHead + ChatColor.AQUA + i + " " + type + " " + date);
+                    }
+                } else {
+                    commandSender.sendMessage(msgHead + ChatColor.RED + "语法错误");
+                }
             } else {
                 commandSender.sendMessage(msgHead + ChatColor.RED + "语法错误");
             }
@@ -142,6 +168,64 @@ public class MainCommand implements CommandExecutor, TabExecutor {
             } else {
                 commandSender.sendMessage(msgHead + ChatColor.RED + "语法错误");
             }
+        } else if (strings.length == 3) {
+            String message0 = strings[0];
+            if (message0.equals("timer")) {
+                TimerManager timerManager = FestiveFirework.getPlugin(FestiveFirework.class).getTimerManager();
+                String message1 = strings[1];
+                if (message1.equals("add-start")) {
+                    String message2 = strings[2];
+                    Date date;
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-HHmmss");
+                    try {
+                        date = formatter.parse(strings[2]);
+                    } catch (ParseException e) {
+                        commandSender.sendMessage(msgHead + ChatColor.RED + "时间格式错误");
+                        return false;
+                    }
+                    boolean flag = timerManager.addTimer(1, date);
+                    if (!flag) {
+                        commandSender.sendMessage(msgHead + ChatColor.RED + "此时间已经被占用");
+                    } else {
+                        commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功添加定时器");
+                    }
+                } else if (message1.equals("add-stop")) {
+                    String message2 = strings[2];
+                    Date date;
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-HHmmss");
+                    try {
+                        date = formatter.parse(strings[2]);
+                    } catch (ParseException e) {
+                        commandSender.sendMessage(msgHead + ChatColor.RED + "时间格式错误");
+                        return false;
+                    }
+                    boolean flag = timerManager.addTimer(2, date);
+                    if (!flag) {
+                        commandSender.sendMessage(msgHead + ChatColor.RED + "此时间已经被占用");
+                    } else {
+                        commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功添加定时器");
+                    }
+                } else if (message1.equals("del")) {
+                    String message2 = strings[2];
+                    int num;
+                    try {
+                        num = Integer.parseInt(message2);
+                    } catch (NumberFormatException e) {
+                        commandSender.sendMessage(msgHead + ChatColor.RED + "语法错误");
+                        return false;
+                    }
+                    boolean flag = timerManager.delTimer(num);
+                    if (!flag) {
+                        commandSender.sendMessage(msgHead + ChatColor.RED + "找不到该定时器");
+                    } else {
+                        commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功删除定时器");
+                    }
+                } else {
+                    commandSender.sendMessage(msgHead + ChatColor.RED + "语法错误");
+                }
+            } else {
+                commandSender.sendMessage(msgHead + ChatColor.RED + "语法错误");
+            }
         } else {
             commandSender.sendMessage(msgHead + ChatColor.RED + "语法错误");
         }
@@ -180,16 +264,24 @@ public class MainCommand implements CommandExecutor, TabExecutor {
             commandTab.add("list");
             commandTab.add("start");
             commandTab.add("stop");
-            commandTab.add("help");
+            commandTab.add("timer");
             commandTab.add("reload");
             return commandTab;
-        } else if (args.length == 2 && args[0].equals("del")) {
-            FileConfiguration config = FestiveFirework.getProvidingPlugin(FestiveFirework.class).getConfig();
-            List<Map<?, ?>> points = config.getMapList("points");
-            for (Map<?, ?> map : points) {
-                commandTab.add((String) map.get("name"));
+        } else if (args.length == 2) {
+            if (args[0].equals("del")) {
+                FileConfiguration config = FestiveFirework.getProvidingPlugin(FestiveFirework.class).getConfig();
+                List<Map<?, ?>> points = config.getMapList("points");
+                for (Map<?, ?> map : points) {
+                    commandTab.add((String) map.get("name"));
+                }
+                return commandTab;
+            } else if (args[0].equals("timer")) {
+                commandTab.add("add-start");
+                commandTab.add("add-stop");
+                commandTab.add("del");
+                commandTab.add("list");
+                return commandTab;
             }
-            return commandTab;
         }
         return null;
     }
