@@ -5,6 +5,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,8 @@ import java.util.Random;
 public class FireworkUtil {
     private static boolean isWorking = false;
 
+    private static BukkitTask task = null;
+
     public static void start(int interval, List<Map<?, ?>> points) {
         isWorking = true;
         work(interval, points);
@@ -20,12 +23,12 @@ public class FireworkUtil {
 
     public static void stop() {
         isWorking = false;
-        Bukkit.getScheduler().cancelTasks(FestiveFirework.getProvidingPlugin(FestiveFirework.class));
+        task.cancel();
     }
 
     private static void work(int interval, List<Map<?, ?>> points) {
         Plugin plugin = FestiveFirework.getProvidingPlugin(FestiveFirework.class);
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        task = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             for (Map<?, ?> map : points) {
                 String worldName = (String) map.get("world");
                 World world = Bukkit.getWorld(worldName);

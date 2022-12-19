@@ -46,6 +46,7 @@ public class MainCommand implements CommandExecutor, TabExecutor {
             sendHelp(msgHead, commandSender);
         } else if (strings.length == 2) {
             String message0 = strings[0];
+            String message1 = strings[1];
             if (message0.equals("add")) {
                 if (!(commandSender instanceof Player)) {
                     commandSender.sendMessage(msgHead + ChatColor.RED + "此命令无法在控制台调用");
@@ -55,7 +56,6 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                     commandSender.sendMessage(msgHead + ChatColor.RED + "请先停止烟花燃放");
                     return false;
                 }
-                String message1 = strings[1];
                 if (!isLetterDigit(message1)) {
                     commandSender.sendMessage(msgHead + ChatColor.RED + "燃放点名称只能包含数字和字母");
                     return false;
@@ -77,7 +77,6 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                     commandSender.sendMessage(msgHead + ChatColor.RED + "请先停止烟花燃放");
                     return false;
                 }
-                String message1 = strings[1];
                 if (!isLetterDigit(message1)) {
                     commandSender.sendMessage(msgHead + ChatColor.RED + "燃放点名称只能包含数字和字母");
                     return false;
@@ -94,7 +93,6 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                     commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功删除 " + message1 + " 燃放点");
                 }
             } else if (message0.equals("timer")) {
-                String message1 = strings[1];
                 if (message1.equals("list")) {
                     TimerManager timerManager = FestiveFirework.getPlugin(FestiveFirework.class).getTimerManager();
                     List<Map<?, ?>> timers = timerManager.getTimerList();
@@ -126,13 +124,18 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                     commandSender.sendMessage(msgHead + ChatColor.RED + "烟花燃放已经开始了");
                     return false;
                 }
-                int interval = config.getInt("interval");
-                if (interval < 7) {
-                    commandSender.sendMessage(msgHead + ChatColor.GOLD + "由于性能原因，请不要设置 interval 小于 7");
-                    commandSender.sendMessage(msgHead + ChatColor.GOLD + "将使用 7 作为 interval 值");
-                    interval = 7;
+                List<Map<?, ?>> points = config.getMapList("points");
+                if (points.isEmpty()) {
+                    commandSender.sendMessage(msgHead + ChatColor.RED + "燃放点列表为空");
+                    return false;
                 }
-                FireworkUtil.start(interval, config.getMapList("points"));
+                int interval = config.getInt("interval");
+                if (interval < 5) {
+                    commandSender.sendMessage(msgHead + ChatColor.GOLD + "由于性能原因，请不要设置 interval 小于 5");
+                    commandSender.sendMessage(msgHead + ChatColor.GOLD + "将使用 5 作为 interval 值");
+                    interval = 5;
+                }
+                FireworkUtil.start(interval, points);
                 commandSender.sendMessage(msgHead + ChatColor.GREEN + "开始燃放烟花");
             } else if (message0.equals("stop")) {
                 if (!FireworkUtil.getStatus()) {
@@ -170,13 +173,13 @@ public class MainCommand implements CommandExecutor, TabExecutor {
             }
         } else if (strings.length == 3) {
             String message0 = strings[0];
+            String message1 = strings[1];
+            String message2 = strings[2];
             if (message0.equals("timer")) {
                 TimerManager timerManager = FestiveFirework.getPlugin(FestiveFirework.class).getTimerManager();
-                String message1 = strings[1];
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-HHmmss");
                 if (message1.equals("add-start")) {
-                    String message2 = strings[2];
                     Date date;
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-HHmmss");
                     try {
                         date = formatter.parse(strings[2]);
                     } catch (ParseException e) {
@@ -190,9 +193,7 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                         commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功添加定时器");
                     }
                 } else if (message1.equals("add-stop")) {
-                    String message2 = strings[2];
                     Date date;
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-HHmmss");
                     try {
                         date = formatter.parse(strings[2]);
                     } catch (ParseException e) {
@@ -206,7 +207,6 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                         commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功添加定时器");
                     }
                 } else if (message1.equals("del")) {
-                    String message2 = strings[2];
                     int num;
                     try {
                         num = Integer.parseInt(message2);

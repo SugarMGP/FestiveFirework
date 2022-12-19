@@ -19,12 +19,6 @@ public final class FestiveFirework extends JavaPlugin {
         Bukkit.getScheduler().cancelTasks(this);
     }
 
-    @Override
-    public void saveDefaultConfig() {
-        super.saveDefaultConfig();
-        timerManager.saveDefaultConfig();
-    }
-
     public TimerManager getTimerManager() {
         return timerManager;
     }
