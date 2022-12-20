@@ -24,25 +24,25 @@ public class MainCommand implements CommandExecutor, TabExecutor {
     }
 
     private static void sendHelp(String head, CommandSender commandSender) {
-        commandSender.sendMessage(head + ChatColor.AQUA + "插件用法如下：");
-        commandSender.sendMessage(head + ChatColor.AQUA + "/ff add <名称> - 添加当前玩家位置为一个燃放点");
-        commandSender.sendMessage(head + ChatColor.AQUA + "/ff del <名称> - 删除一个燃放点");
-        commandSender.sendMessage(head + ChatColor.AQUA + "/ff list - 查看燃放点列表");
-        commandSender.sendMessage(head + ChatColor.AQUA + "/ff start - 开始燃放烟花");
-        commandSender.sendMessage(head + ChatColor.AQUA + "/ff stop - 停止燃放烟花");
-        commandSender.sendMessage(head + ChatColor.AQUA + "/ff timer add-start <yyyyMMdd-HHmmss> - 添加定时开始燃放烟花");
-        commandSender.sendMessage(head + ChatColor.AQUA + "/ff timer add-stop <yyyyMMdd-HHmmss> - 添加定时停止燃放烟花");
-        commandSender.sendMessage(head + ChatColor.AQUA + "/ff timer del <序号> - 删除一个定时器");
-        commandSender.sendMessage(head + ChatColor.AQUA + "/ff timer list - 查看定时器列表");
-        commandSender.sendMessage(head + ChatColor.AQUA + "/ff reload - 重载插件");
+        commandSender.sendMessage(head + ChatColor.DARK_AQUA + "插件用法如下：");
+        commandSender.sendMessage(head + ChatColor.DARK_AQUA + "/ff add <名称> - 添加当前玩家位置为一个燃放点");
+        commandSender.sendMessage(head + ChatColor.DARK_AQUA + "/ff del <名称> - 删除一个燃放点");
+        commandSender.sendMessage(head + ChatColor.DARK_AQUA + "/ff list - 查看燃放点列表");
+        commandSender.sendMessage(head + ChatColor.DARK_AQUA + "/ff start - 开始燃放烟花");
+        commandSender.sendMessage(head + ChatColor.DARK_AQUA + "/ff stop - 停止燃放烟花");
+        commandSender.sendMessage(head + ChatColor.DARK_AQUA + "/ff timer add-start <yyyyMMdd-HHmmss> - 添加定时开始燃放烟花");
+        commandSender.sendMessage(head + ChatColor.DARK_AQUA + "/ff timer add-stop <yyyyMMdd-HHmmss> - 添加定时停止燃放烟花");
+        commandSender.sendMessage(head + ChatColor.DARK_AQUA + "/ff timer del <序号> - 删除一个定时器");
+        commandSender.sendMessage(head + ChatColor.DARK_AQUA + "/ff timer list - 查看定时器列表");
+        commandSender.sendMessage(head + ChatColor.DARK_AQUA + "/ff reload - 重载插件");
     }
 
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         Plugin plugin = FestiveFirework.getProvidingPlugin(FestiveFirework.class);
         FileConfiguration config = plugin.getConfig();
-        String msgHead = ChatColor.YELLOW + "【FestiveFirework】";
+        String msgHead = ChatColor.YELLOW + "【节日焰火】";
         if (!(commandSender.hasPermission("ff.commands.use"))) {
-            commandSender.sendMessage(msgHead + ChatColor.RED + "您没有权限使用此命令");
+            commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "您没有权限使用此命令");
             return false;
         }
         if (strings.length == 0) {
@@ -52,15 +52,15 @@ public class MainCommand implements CommandExecutor, TabExecutor {
             String message1 = strings[1];
             if (message0.equals("add")) {
                 if (!(commandSender instanceof Player)) {
-                    commandSender.sendMessage(msgHead + ChatColor.RED + "此命令无法在控制台调用");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "此命令无法在控制台调用");
                     return false;
                 }
                 if (FireworkUtil.getStatus()) {
-                    commandSender.sendMessage(msgHead + ChatColor.RED + "请先停止烟花燃放");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "请先停止烟花燃放");
                     return false;
                 }
                 if (!isLetterDigit(message1)) {
-                    commandSender.sendMessage(msgHead + ChatColor.RED + "燃放点名称只能包含数字和字母");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "燃放点名称只能包含数字和字母");
                     return false;
                 }
                 Location location = ((Player) commandSender).getLocation();
@@ -68,42 +68,42 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                 List<Map<?, ?>> points = config.getMapList("points");
                 int flag = findPoint(points, message1);
                 if (flag != -1) {
-                    commandSender.sendMessage(msgHead + ChatColor.RED + "已存在同名燃放点");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "已存在同名燃放点");
                     return false;
                 }
                 points.add(createPoint(message1, location.getWorld().getName(), location.getX(), location.getY(), location.getZ()));
                 config.set("points", points);
                 plugin.saveConfig();
-                commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功添加 " + message1 + " 燃放点");
+                commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "成功添加 " + message1 + " 燃放点");
             } else if (message0.equals("del")) {
                 if (FireworkUtil.getStatus()) {
-                    commandSender.sendMessage(msgHead + ChatColor.RED + "请先停止烟花燃放");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "请先停止烟花燃放");
                     return false;
                 }
                 if (!isLetterDigit(message1)) {
-                    commandSender.sendMessage(msgHead + ChatColor.RED + "燃放点名称只能包含数字和字母");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "燃放点名称只能包含数字和字母");
                     return false;
                 }
                 List<Map<?, ?>> points = config.getMapList("points");
                 message1 = message1.toLowerCase();
                 int flag = findPoint(points, message1);
                 if (flag == -1) {
-                    commandSender.sendMessage(msgHead + ChatColor.RED + "找不到该燃放点");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "找不到该燃放点");
                 } else {
                     points.remove(flag);
                     config.set("points", points);
                     plugin.saveConfig();
-                    commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功删除 " + message1 + " 燃放点");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "成功删除 " + message1 + " 燃放点");
                 }
             } else if (message0.equals("timer")) {
                 if (message1.equals("list")) {
                     TimerManager timerManager = FestiveFirework.getPlugin(FestiveFirework.class).getTimerManager();
                     List<Map<?, ?>> timers = timerManager.getTimerList();
                     if (timers.isEmpty()) {
-                        commandSender.sendMessage(msgHead + ChatColor.RED + "定时器列表为空");
+                        commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "定时器列表为空");
                         return false;
                     }
-                    commandSender.sendMessage(msgHead + ChatColor.AQUA + "定时器列表如下：");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_AQUA + "定时器列表如下：");
                     for (int i = 0; i < timers.size(); i++) {
                         Map<?, ?> map = timers.get(i);
                         int t = (Integer) map.get("type");
@@ -112,24 +112,24 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                         if (t == 2) {
                             type = "stop ";
                         }
-                        commandSender.sendMessage(msgHead + ChatColor.AQUA + i + " " + type + " " + date);
+                        commandSender.sendMessage(msgHead + ChatColor.DARK_AQUA + i + " " + type + " " + date);
                     }
                 } else {
-                    commandSender.sendMessage(msgHead + ChatColor.RED + "语法错误");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "语法错误");
                 }
             } else {
-                commandSender.sendMessage(msgHead + ChatColor.RED + "语法错误");
+                commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "语法错误");
             }
         } else if (strings.length == 1) {
             String message0 = strings[0];
             if (message0.equals("start")) {
                 if (FireworkUtil.getStatus()) {
-                    commandSender.sendMessage(msgHead + ChatColor.RED + "烟花燃放已经开始了");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "烟花燃放已经开始了");
                     return false;
                 }
                 List<Map<?, ?>> points = config.getMapList("points");
                 if (points.isEmpty()) {
-                    commandSender.sendMessage(msgHead + ChatColor.RED + "燃放点列表为空");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "燃放点列表为空");
                     return false;
                 }
                 int interval = config.getInt("interval");
@@ -139,40 +139,40 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                     interval = 5;
                 }
                 FireworkUtil.start(interval, points);
-                commandSender.sendMessage(msgHead + ChatColor.GREEN + "开始燃放烟花");
+                commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "开始燃放烟花");
             } else if (message0.equals("stop")) {
                 if (!FireworkUtil.getStatus()) {
-                    commandSender.sendMessage(msgHead + ChatColor.RED + "烟花燃放已经停止了");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "烟花燃放已经停止了");
                     return false;
                 }
                 FireworkUtil.stop();
-                commandSender.sendMessage(msgHead + ChatColor.GREEN + "停止燃放烟花");
+                commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "停止燃放烟花");
             } else if (message0.equals("list")) {
                 List<Map<?, ?>> points = config.getMapList("points");
                 if (points.isEmpty()) {
-                    commandSender.sendMessage(msgHead + ChatColor.RED + "燃放点列表为空");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "燃放点列表为空");
                     return false;
                 }
-                commandSender.sendMessage(msgHead + ChatColor.AQUA + "燃放点列表如下：");
+                commandSender.sendMessage(msgHead + ChatColor.DARK_AQUA + "燃放点列表如下：");
                 for (Map<?, ?> map : points) {
                     String name = (String) map.get("name");
                     String world = (String) map.get("world");
                     String x = String.format("%.1f", (Double) map.get("x"));
                     String y = String.format("%.1f", (Double) map.get("y"));
                     String z = String.format("%.1f", (Double) map.get("z"));
-                    commandSender.sendMessage(msgHead + ChatColor.AQUA + name + " " + world + " " + x + " " + y + " " + z);
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_AQUA + name + " " + world + " " + x + " " + y + " " + z);
                 }
             } else if (message0.equals("reload")) {
                 if (FireworkUtil.getStatus()) {
-                    commandSender.sendMessage(msgHead + ChatColor.RED + "请先停止烟花燃放");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "请先停止烟花燃放");
                     return false;
                 }
                 plugin.reloadConfig();
-                commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功重载插件");
+                commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "成功重载插件");
             } else if (message0.equals("help")) {
                 sendHelp(msgHead, commandSender);
             } else {
-                commandSender.sendMessage(msgHead + ChatColor.RED + "语法错误");
+                commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "语法错误");
             }
         } else if (strings.length == 3) {
             String message0 = strings[0];
@@ -186,51 +186,51 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                     try {
                         date = formatter.parse(strings[2]);
                     } catch (ParseException e) {
-                        commandSender.sendMessage(msgHead + ChatColor.RED + "时间格式错误");
+                        commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "时间格式错误");
                         return false;
                     }
                     boolean flag = timerManager.addTimer(1, date);
                     if (!flag) {
-                        commandSender.sendMessage(msgHead + ChatColor.RED + "此时间已经被占用");
+                        commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "此时间已经被占用");
                     } else {
-                        commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功添加定时器");
+                        commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "成功添加定时器");
                     }
                 } else if (message1.equals("add-stop")) {
                     Date date;
                     try {
                         date = formatter.parse(strings[2]);
                     } catch (ParseException e) {
-                        commandSender.sendMessage(msgHead + ChatColor.RED + "时间格式错误");
+                        commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "时间格式错误");
                         return false;
                     }
                     boolean flag = timerManager.addTimer(2, date);
                     if (!flag) {
-                        commandSender.sendMessage(msgHead + ChatColor.RED + "此时间已经被占用");
+                        commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "此时间已经被占用");
                     } else {
-                        commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功添加定时器");
+                        commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "成功添加定时器");
                     }
                 } else if (message1.equals("del")) {
                     int num;
                     try {
                         num = Integer.parseInt(message2);
                     } catch (NumberFormatException e) {
-                        commandSender.sendMessage(msgHead + ChatColor.RED + "语法错误");
+                        commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "语法错误");
                         return false;
                     }
                     boolean flag = timerManager.delTimer(num);
                     if (!flag) {
-                        commandSender.sendMessage(msgHead + ChatColor.RED + "找不到该定时器");
+                        commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "找不到该定时器");
                     } else {
-                        commandSender.sendMessage(msgHead + ChatColor.GREEN + "成功删除定时器");
+                        commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "成功删除定时器");
                     }
                 } else {
-                    commandSender.sendMessage(msgHead + ChatColor.RED + "语法错误");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "语法错误");
                 }
             } else {
-                commandSender.sendMessage(msgHead + ChatColor.RED + "语法错误");
+                commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "语法错误");
             }
         } else {
-            commandSender.sendMessage(msgHead + ChatColor.RED + "语法错误");
+            commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "语法错误");
         }
         return false;
     }
