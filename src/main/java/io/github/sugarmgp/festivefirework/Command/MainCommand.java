@@ -1,5 +1,8 @@
-package io.github.sugarmgp.festivefirework;
+package io.github.sugarmgp.festivefirework.Command;
 
+import io.github.sugarmgp.festivefirework.FestiveFirework;
+import io.github.sugarmgp.festivefirework.Util.FireworkUtil;
+import io.github.sugarmgp.festivefirework.Util.TimerManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;

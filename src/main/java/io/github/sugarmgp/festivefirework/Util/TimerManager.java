@@ -1,6 +1,7 @@
-package io.github.sugarmgp.festivefirework;
+package io.github.sugarmgp.festivefirework.Util;
 
 import com.google.common.base.Charsets;
+import io.github.sugarmgp.festivefirework.FestiveFirework;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

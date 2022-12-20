@@ -1,5 +1,6 @@
-package io.github.sugarmgp.festivefirework;
+package io.github.sugarmgp.festivefirework.Util;
 
+import io.github.sugarmgp.festivefirework.FestiveFirework;
 import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Firework;

@@ -1,5 +1,7 @@
 package io.github.sugarmgp.festivefirework;
 
+import io.github.sugarmgp.festivefirework.Command.MainCommand;
+import io.github.sugarmgp.festivefirework.Util.TimerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 

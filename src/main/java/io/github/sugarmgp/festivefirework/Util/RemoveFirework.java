@@ -1,4 +1,4 @@
-package io.github.sugarmgp.festivefirework;
+package io.github.sugarmgp.festivefirework.Util;
 
 import org.bukkit.entity.Firework;
 
