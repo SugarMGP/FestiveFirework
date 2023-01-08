@@ -81,9 +81,6 @@ public class TimerManager {
                             break;
                         }
                         int interval = config.getInt("interval");
-                        if (interval < 5) {
-                            interval = 5;
-                        }
                         FireworkUtil.start(interval, points);
                         sender.sendMessage(msgHead + ChatColor.DARK_GREEN + "已激活 " + i + " 号定时器，开始燃放烟花");
                     } else {
@@ -116,7 +113,7 @@ public class TimerManager {
         try {
             timerConfig.save(timerFile);
         } catch (IOException ex) {
-            getLogger().log(Level.SEVERE, "Could not save config to " + timerFile, ex);
+            getLogger().log(Level.SEVERE, "Could not save timer config to " + timerFile, ex);
         }
     }
 

@@ -3,6 +3,7 @@ package io.github.sugarmgp.festivefirework;
 import io.github.sugarmgp.festivefirework.Command.MainCommand;
 import io.github.sugarmgp.festivefirework.Util.TimerManager;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class FestiveFirework extends JavaPlugin {
@@ -12,6 +13,7 @@ public final class FestiveFirework extends JavaPlugin {
     public void onEnable() {
         timerManager = new TimerManager();
         saveDefaultConfig();
+        reloadConfig();
         getCommand("festivefirework").setExecutor(new MainCommand());
         timerManager.timerWork();
     }
@@ -26,6 +28,17 @@ public final class FestiveFirework extends JavaPlugin {
     public void saveDefaultConfig() {
         super.saveDefaultConfig();
         timerManager.saveDefaultConfig();
+    }
+
+    @Override
+    public void reloadConfig() {
+        super.reloadConfig();
+        FileConfiguration config = getConfig();
+        int interval = config.getInt("interval");
+        if (!(interval >= 1 && interval <= 72000)) {
+            config.set("interval", 15);
+            saveConfig();
+        }
     }
 
     public TimerManager getTimerManager() {
