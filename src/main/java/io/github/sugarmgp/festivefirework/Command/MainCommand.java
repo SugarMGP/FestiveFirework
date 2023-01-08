@@ -11,7 +11,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,7 +37,7 @@ public class MainCommand implements CommandExecutor, TabExecutor {
     }
 
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        Plugin plugin = FestiveFirework.getProvidingPlugin(FestiveFirework.class);
+        FestiveFirework plugin = FestiveFirework.getPlugin(FestiveFirework.class);
         FileConfiguration config = plugin.getConfig();
         String msgHead = ChatColor.YELLOW + "【节日焰火】";
         if (!(commandSender.hasPermission("ff.commands.use"))) {
@@ -168,6 +167,7 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                     return false;
                 }
                 plugin.reloadConfig();
+                plugin.getTimerManager().reloadTimerConfig();
                 commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "成功重载插件");
             } else if (message0.equals("help")) {
                 sendHelp(msgHead, commandSender);
@@ -179,7 +179,7 @@ public class MainCommand implements CommandExecutor, TabExecutor {
             String message1 = strings[1];
             String message2 = strings[2];
             if (message0.equals("timer")) {
-                TimerManager timerManager = FestiveFirework.getPlugin(FestiveFirework.class).getTimerManager();
+                TimerManager timerManager = plugin.getTimerManager();
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-HHmmss");
                 if (message1.equals("add-start")) {
                     Date date;

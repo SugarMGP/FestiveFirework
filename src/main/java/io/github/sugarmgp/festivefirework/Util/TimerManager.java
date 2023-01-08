@@ -100,7 +100,7 @@ public class TimerManager {
         }, 1, 20);
     }
 
-    private void reloadTimerConfig() {
+    public void reloadTimerConfig() {
         timerConfig = YamlConfiguration.loadConfiguration(timerFile);
 
         final InputStream defConfigStream = getPlugin().getResource("timer.yml");
