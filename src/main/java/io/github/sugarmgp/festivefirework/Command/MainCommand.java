@@ -220,6 +220,10 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                     commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "语法错误");
                 }
             } else if (message0.equals("interval") && message1.equals("set")) {
+                if (FireworkUtil.getStatus()) {
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "请先停止烟花燃放");
+                    return false;
+                }
                 int num;
                 try {
                     num = Integer.parseInt(message2);
