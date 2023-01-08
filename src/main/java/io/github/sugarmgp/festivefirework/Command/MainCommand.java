@@ -236,7 +236,7 @@ public class MainCommand implements CommandExecutor, TabExecutor {
                     plugin.saveConfig();
                     commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "成功设置间隔时间为 " + num);
                 } else {
-                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "间隔时间只能设置为 1~72000 的整数");
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "间隔时间只能设置为 1 至 72000 的整数");
                 }
             } else {
                 commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "语法错误");
