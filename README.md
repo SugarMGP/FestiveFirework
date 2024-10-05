@@ -11,4 +11,4 @@
 - 插件会通过特殊的随机算法确保每个烟花都足够美观
 - 插件提供了定时器功能，让您轻松地管理烟花燃放
 
-更多详细介绍可以前往 [MCBBS介绍贴](https://www.mcbbs.net/thread-1400192-1-1.html) 查看
+~~更多详细介绍可以前往 [MCBBS介绍贴](https://www.mcbbs.net/thread-1400192-1-1.html) 查看~~
