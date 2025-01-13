@@ -1,4 +1,4 @@
-package io.github.sugarmgp.festivefirework.Util;
+package io.github.sugarmgp.festivefirework.util;
 
 import com.google.common.base.Charsets;
 import io.github.sugarmgp.festivefirework.FestiveFirework;
@@ -23,9 +23,9 @@ import java.util.logging.Logger;
 
 public class TimerManager {
     private FileConfiguration timerConfig;
-    private File timerFile;
-    private List<Map<?, ?>> timers;
-    private SimpleDateFormat formatter;
+    private final File timerFile;
+    private final List<Map<?, ?>> timers;
+    private final SimpleDateFormat formatter;
 
     public TimerManager() {
         formatter = new SimpleDateFormat("yyyy.MM.dd-HH:mm:ss");

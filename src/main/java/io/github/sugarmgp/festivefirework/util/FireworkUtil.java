@@ -1,4 +1,4 @@
-package io.github.sugarmgp.festivefirework.Util;
+package io.github.sugarmgp.festivefirework.util;
 
 import io.github.sugarmgp.festivefirework.FestiveFirework;
 import org.bukkit.*;
@@ -38,7 +38,7 @@ public class FireworkUtil {
                 double z = (Double) map.get("z");
                 Location location = new Location(world, x, y, z);
 
-                if (Bukkit.getOnlinePlayers().size() == 0)
+                if (Bukkit.getOnlinePlayers().isEmpty())
                     continue;
                 if (!location.getChunk().isLoaded())
                     continue;
@@ -79,7 +79,6 @@ public class FireworkUtil {
                     fwm.clearEffects();
                     fwm.addEffect(fb.build());
                     fwm.setPower(power);
-                    fw.setPersistent(false);
                     fw.setFireworkMeta(fwm);
                     Bukkit.getScheduler().runTaskLater(plugin, new RemoveFirework(fw), power * 30 + 40);
                 });

@@ -1,8 +1,8 @@
-package io.github.sugarmgp.festivefirework.Command;
+package io.github.sugarmgp.festivefirework.command;
 
 import io.github.sugarmgp.festivefirework.FestiveFirework;
-import io.github.sugarmgp.festivefirework.Util.FireworkUtil;
-import io.github.sugarmgp.festivefirework.Util.TimerManager;
+import io.github.sugarmgp.festivefirework.util.FireworkUtil;
+import io.github.sugarmgp.festivefirework.util.TimerManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -46,38 +46,44 @@ public class MainCommand implements CommandExecutor, TabExecutor {
             sendHelp(msgHead, commandSender);
         } else if (strings.length == 1) {
             String message0 = strings[0];
-            if (message0.equals("start")) {
-                if (FireworkUtil.getStatus()) {
-                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "烟花燃放已经开始了");
-                    return false;
-                }
-                List<Map<?, ?>> points = config.getMapList("points");
-                if (points.isEmpty()) {
-                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "燃放点列表为空");
-                    return false;
-                }
-                int interval = config.getInt("interval");
-                FireworkUtil.start(interval, points);
-                commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "开始燃放烟花");
-            } else if (message0.equals("stop")) {
-                if (!FireworkUtil.getStatus()) {
-                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "烟花燃放已经停止了");
-                    return false;
-                }
-                FireworkUtil.stop();
-                commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "停止燃放烟花");
-            } else if (message0.equals("reload")) {
-                if (FireworkUtil.getStatus()) {
-                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "请先停止烟花燃放");
-                    return false;
-                }
-                plugin.reloadConfig();
-                plugin.getTimerManager().reloadTimerConfig();
-                commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "成功重载插件");
-            } else if (message0.equals("help")) {
-                sendHelp(msgHead, commandSender);
-            } else {
-                commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "语法错误");
+            switch (message0) {
+                case "start":
+                    if (FireworkUtil.getStatus()) {
+                        commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "烟花燃放已经开始了");
+                        return false;
+                    }
+                    List<Map<?, ?>> points = config.getMapList("points");
+                    if (points.isEmpty()) {
+                        commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "燃放点列表为空");
+                        return false;
+                    }
+                    int interval = config.getInt("interval");
+                    FireworkUtil.start(interval, points);
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "开始燃放烟花");
+                    break;
+                case "stop":
+                    if (!FireworkUtil.getStatus()) {
+                        commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "烟花燃放已经停止了");
+                        return false;
+                    }
+                    FireworkUtil.stop();
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "停止燃放烟花");
+                    break;
+                case "reload":
+                    if (FireworkUtil.getStatus()) {
+                        commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "请先停止烟花燃放");
+                        return false;
+                    }
+                    plugin.reloadConfig();
+                    plugin.getTimerManager().reloadTimerConfig();
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "成功重载插件");
+                    break;
+                case "help":
+                    sendHelp(msgHead, commandSender);
+                    break;
+                default:
+                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "语法错误");
+                    break;
             }
         } else if (strings.length == 2) {
             String message0 = strings[0];
@@ -174,50 +180,58 @@ public class MainCommand implements CommandExecutor, TabExecutor {
             } else if (message0.equals("timer")) {
                 TimerManager timerManager = plugin.getTimerManager();
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd-HHmmss");
-                if (message1.equals("add-start")) {
-                    Date date;
-                    try {
-                        date = formatter.parse(message2);
-                    } catch (ParseException e) {
-                        commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "时间格式错误");
-                        return false;
+                switch (message1) {
+                    case "add-start": {
+                        Date date;
+                        try {
+                            date = formatter.parse(message2);
+                        } catch (ParseException e) {
+                            commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "时间格式错误");
+                            return false;
+                        }
+                        boolean flag = timerManager.addTimer(1, date);
+                        if (!flag) {
+                            commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "此时间已经被占用");
+                        } else {
+                            commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "成功添加定时器");
+                        }
+                        break;
                     }
-                    boolean flag = timerManager.addTimer(1, date);
-                    if (!flag) {
-                        commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "此时间已经被占用");
-                    } else {
-                        commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "成功添加定时器");
+                    case "add-stop": {
+                        Date date;
+                        try {
+                            date = formatter.parse(message2);
+                        } catch (ParseException e) {
+                            commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "时间格式错误");
+                            return false;
+                        }
+                        boolean flag = timerManager.addTimer(2, date);
+                        if (!flag) {
+                            commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "此时间已经被占用");
+                        } else {
+                            commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "成功添加定时器");
+                        }
+                        break;
                     }
-                } else if (message1.equals("add-stop")) {
-                    Date date;
-                    try {
-                        date = formatter.parse(message2);
-                    } catch (ParseException e) {
-                        commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "时间格式错误");
-                        return false;
+                    case "del": {
+                        int num;
+                        try {
+                            num = Integer.parseInt(message2);
+                        } catch (NumberFormatException e) {
+                            commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "语法错误");
+                            return false;
+                        }
+                        boolean flag = timerManager.delTimer(num);
+                        if (!flag) {
+                            commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "找不到该定时器");
+                        } else {
+                            commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "成功删除定时器");
+                        }
+                        break;
                     }
-                    boolean flag = timerManager.addTimer(2, date);
-                    if (!flag) {
-                        commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "此时间已经被占用");
-                    } else {
-                        commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "成功添加定时器");
-                    }
-                } else if (message1.equals("del")) {
-                    int num;
-                    try {
-                        num = Integer.parseInt(message2);
-                    } catch (NumberFormatException e) {
+                    default:
                         commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "语法错误");
-                        return false;
-                    }
-                    boolean flag = timerManager.delTimer(num);
-                    if (!flag) {
-                        commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "找不到该定时器");
-                    } else {
-                        commandSender.sendMessage(msgHead + ChatColor.DARK_GREEN + "成功删除定时器");
-                    }
-                } else {
-                    commandSender.sendMessage(msgHead + ChatColor.DARK_RED + "语法错误");
+                        break;
                 }
             } else if (message0.equals("interval") && message1.equals("set")) {
                 if (FireworkUtil.getStatus()) {
@@ -300,35 +314,18 @@ public class MainCommand implements CommandExecutor, TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            ArrayList<String> commandTab = new ArrayList<String>();
-            commandTab.add("point");
-            commandTab.add("start");
-            commandTab.add("stop");
-            commandTab.add("timer");
-            commandTab.add("interval");
-            commandTab.add("reload");
-            commandTab.add("help");
-            return commandTab;
+            return Arrays.asList("point","start","stop","timer","interval","reload","help");
         } else if (args.length == 2) {
-            if (args[0].equals("point")) {
-                ArrayList<String> commandTab = new ArrayList<String>();
-                commandTab.add("add");
-                commandTab.add("del");
-                commandTab.add("rename");
-                commandTab.add("list");
-                return commandTab;
-            } else if (args[0].equals("timer")) {
-                ArrayList<String> commandTab = new ArrayList<String>();
-                commandTab.add("add-start");
-                commandTab.add("add-stop");
-                commandTab.add("del");
-                commandTab.add("list");
-                return commandTab;
-            } else if (args[0].equals("interval")) {
-                ArrayList<String> commandTab = new ArrayList<String>();
-                commandTab.add("set");
-                commandTab.add("get");
-                return commandTab;
+            switch (args[0]) {
+                case "point": {
+                    return Arrays.asList("add","del","rename","list");
+                }
+                case "timer": {
+                    return Arrays.asList("add-start","add-stop","del","list");
+                }
+                case "interval": {
+                    return Arrays.asList("set","get");
+                }
             }
         } else if (args.length == 3) {
             if (args[0].equals("point") && (args[1].equals("del") || args[1].equals("rename"))) {

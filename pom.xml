@@ -6,7 +6,7 @@
 
     <groupId>FestiveFirework</groupId>
     <artifactId>FestiveFirework</artifactId>
-    <version>1.2.2.1</version>
+    <version>1.2.3</version>
     <packaging>jar</packaging>
 
     <name>FestiveFirework</name>
@@ -17,11 +17,12 @@
     </properties>
 
     <build>
+        <defaultGoal>clean package</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.13.0</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -30,7 +31,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.5.3</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
