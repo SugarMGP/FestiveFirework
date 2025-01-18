@@ -11,6 +11,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.logging.Level;
 
 public class FireworkUtil {
     private static boolean isWorking = false;
@@ -33,6 +34,10 @@ public class FireworkUtil {
             for (Map<?, ?> map : points) {
                 String worldName = (String) map.get("world");
                 World world = Bukkit.getWorld(worldName);
+                if (world == null) {
+                    plugin.getLogger().log(Level.WARNING, "World " + worldName + " not found");
+                    continue;
+                }
                 double x = (Double) map.get("x");
                 double y = (Double) map.get("y");
                 double z = (Double) map.get("z");

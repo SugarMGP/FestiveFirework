@@ -314,17 +314,17 @@ public class MainCommand implements CommandExecutor, TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("point","start","stop","timer","interval","reload","help");
+            return Arrays.asList("point", "start", "stop", "timer", "interval", "reload", "help");
         } else if (args.length == 2) {
             switch (args[0]) {
                 case "point": {
-                    return Arrays.asList("add","del","rename","list");
+                    return Arrays.asList("add", "del", "rename", "list");
                 }
                 case "timer": {
-                    return Arrays.asList("add-start","add-stop","del","list");
+                    return Arrays.asList("add-start", "add-stop", "del", "list");
                 }
                 case "interval": {
-                    return Arrays.asList("set","get");
+                    return Arrays.asList("set", "get");
                 }
             }
         } else if (args.length == 3) {

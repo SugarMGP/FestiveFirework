@@ -22,10 +22,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TimerManager {
-    private FileConfiguration timerConfig;
     private final File timerFile;
     private final List<Map<?, ?>> timers;
     private final SimpleDateFormat formatter;
+    private FileConfiguration timerConfig;
 
     public TimerManager() {
         formatter = new SimpleDateFormat("yyyy.MM.dd-HH:mm:ss");
